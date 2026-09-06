@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { EmDashGuard } from "@/components/em-dash-guard";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,7 +26,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <EmDashGuard />
+        {children}
+      </body>
     </html>
   );
 }
