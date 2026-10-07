@@ -1,13 +1,23 @@
 import { cn } from "cn"
 
+import { siteConfig } from "@/lib/site"
+
 /*
  * Placeholder product mark, drawn inline rather than loaded as an image so it
  * takes its colours from the theme tokens and follows the app into dark mode
- * without a second asset. Swap the paths (and APP_NAME below) for the real
- * brand when there is one.
+ * without a second asset. Swap BRAND_MARK_PATHS for the real brand when there
+ * is one; the generated apple-icon and Open Graph image pick them up. Mirror
+ * the change in src/app/icon.svg and run `npm run generate:favicon`. The name
+ * lives in siteConfig.
  */
 
-export const APP_NAME = "Acme Inc."
+export const APP_NAME = siteConfig.name
+
+export const BRAND_MARK_PATHS = [
+  "M12 3 3 7.5l9 4.5 9-4.5L12 3Z",
+  "M3 16.5 12 21l9-4.5",
+  "M3 12l9 4.5 9-4.5",
+]
 
 type BrandLogoProps = {
   className?: string
@@ -33,9 +43,9 @@ export function BrandLogo({ className }: BrandLogoProps) {
         className="size-[60%] text-primary-foreground"
         aria-hidden="true"
       >
-        <path d="M12 3 3 7.5l9 4.5 9-4.5L12 3Z" />
-        <path d="M3 16.5 12 21l9-4.5" />
-        <path d="M3 12l9 4.5 9-4.5" />
+        {BRAND_MARK_PATHS.map((d) => (
+          <path key={d} d={d} />
+        ))}
       </svg>
     </div>
   )

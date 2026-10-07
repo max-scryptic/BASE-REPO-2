@@ -42,7 +42,8 @@ export function LoginForm({
             {APP_NAME}
           </Link>
           <CardTitle className="text-balance text-2xl">
-            {isSignup ? "Create your account" : "Welcome back"}
+            {/* Preflight resets heading styles, so the h1 only adds semantics. */}
+            <h1>{isSignup ? "Create your account" : "Welcome back"}</h1>
           </CardTitle>
           {isSignup && (
             <CardDescription className="mt-1.5 text-balance text-base">
