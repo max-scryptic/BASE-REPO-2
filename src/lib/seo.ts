@@ -4,6 +4,30 @@ import { isIndexable, siteConfig, type SiteRoute } from "@/lib/site";
 
 type OgImage = { url: string; width: number; height: number; alt: string };
 
+// Browser tab titles are pipe delimited and never use colons. The home page
+// reads "<AppName> | <Tagline>"; every other page reads "<PageName> | <AppName>".
+export const TITLE_SEPARATOR = " | ";
+
+/**
+ * Joins title parts with TITLE_SEPARATOR, most specific part first.
+ *
+ * Throws on a part that contains a colon or a pipe, so a title that breaks the
+ * format fails the build (or the request, for dynamic routes) instead of
+ * reaching the tab. Clean titles that come from data before passing them in.
+ */
+export function pageTitle(...parts: string[]) {
+  for (const part of parts) {
+    if (/[:|]/.test(part)) {
+      throw new Error(
+        `Page title part "${part}" contains a colon or a pipe. Titles are pipe delimited ("<PageName> | <AppName>"); rephrase it or split it into separate parts.`,
+      );
+    }
+  }
+  return parts.join(TITLE_SEPARATOR);
+}
+
+export const DEFAULT_TITLE = pageTitle(siteConfig.name, siteConfig.tagline);
+
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 export const OG_IMAGE_ALT = `${siteConfig.name}: ${siteConfig.tagline}`;
 
@@ -68,8 +92,7 @@ export function pageMetadata({
 }: PageMetadataOptions): Metadata {
   // The home page leads with the brand; every other page leads with its own
   // title and carries the brand as a suffix.
-  const fullTitle =
-    path === "/" ? `${siteConfig.name}: ${siteConfig.tagline}` : `${title} | ${siteConfig.name}`;
+  const fullTitle = path === "/" ? DEFAULT_TITLE : pageTitle(title, siteConfig.name);
   // With "file" the key is left out entirely: even an undefined `images` stops
   // Next.js from applying the route's opengraph-image file. The Twitter card
   // falls back to the Open Graph image on its own.

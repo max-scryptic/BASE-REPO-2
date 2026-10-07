@@ -14,6 +14,7 @@ Search and answer-engine setup is centralised. Keep it that way when adding page
 
 - Site-wide facts (name, tagline, description, colours, social profiles, AI training opt-out) live in `src/lib/site.ts` as `siteConfig`. Do not hard-code the brand name, URL or description anywhere else.
 - Every page is registered in `routes` in `src/lib/site.ts` and exports `export const metadata = pageMetadata(routes.<name>)` (or `generateMetadata` returning `pageMetadata({...})` for dynamic routes). Never export a hand-written `openGraph` or `twitter` object: Next.js merges metadata shallowly and the page would lose the site defaults and the social image.
+- Tab titles are pipe delimited and never contain colons: `<AppName> | <Tagline>` on the home page, `<PageName> | <AppName>` everywhere else. Set only the page name in `routes` (`title: "Pricing"`, not `"Pricing | Acme"` or `"Acme: Pricing"`); `pageTitle()` in `src/lib/seo.ts` adds the brand and throws on a colon or pipe. Build any other title with `pageTitle()`, never by hand.
 - Use `index: false` for pages with no search value (auth, settings, thank-you pages). Do not add them to `robots.ts` disallow, or crawlers cannot see the noindex.
 - `sitemap.xml` and `llms.txt` are generated from `routes`; data-driven pages (posts, products) must be appended in `src/app/sitemap.ts` and `src/app/llms.txt/route.ts`.
 - Add schema.org JSON-LD with `<JsonLd />` and the builders in `src/lib/structured-data.ts` (breadcrumbs, FAQ, article, web page). Any FAQ or answer in JSON-LD must also be visible on the page.
