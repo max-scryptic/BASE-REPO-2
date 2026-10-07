@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { EmDashGuard } from "@/components/em-dash-guard";
 import { JsonLd } from "@/components/json-ld";
-import { robotsFor } from "@/lib/seo";
+import { DEFAULT_TITLE, pageTitle, robotsFor } from "@/lib/seo";
 import { siteConfig, siteUrl } from "@/lib/site";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 
@@ -26,8 +26,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${siteConfig.name}: ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
+    default: DEFAULT_TITLE,
+    template: pageTitle("%s", siteConfig.name),
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: siteConfig.name,
     locale: siteConfig.locale,
-    title: `${siteConfig.name}: ${siteConfig.tagline}`,
+    title: DEFAULT_TITLE,
     description: siteConfig.description,
   },
   twitter: {
